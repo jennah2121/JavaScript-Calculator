@@ -1,0 +1,98 @@
+* {
+  font-family: orbitron;
+  font-weight: bold;
+}
+
+body {
+  background: black;
+}
+
+.calc-body {
+  background-color: deepSkyBlue;
+  width: 290px;
+  height: 360px;
+  margin: auto;
+  margin-top: 150px;
+  box-shadow: inset 10px 10px 10px -5px dodgerBlue, inset -4px -2px 5px 0px dodgerBlue, 0px 3px 0px 0px cornflowerBlue;
+  border-radius: 5px;
+  border: solid 1px steelBlue;
+}
+
+.display {
+  background-color: aliceblue;
+  width: 250px;
+  height: 75px;
+  margin: auto;
+  position: relative;
+  top: 20px;
+  box-shadow: inset 0px 6px 2px -1px cornflowerBlue;
+}
+
+.message {
+  font-size: 11.5px;
+  padding-left: 2px;
+  padding-top: 3px;
+  margin-bottom: -16px;
+}
+
+.result {
+  text-align: right;
+  font-size: 29px;
+  position: relative;
+  top: 8px;
+  right: 5px;
+}
+
+.sum {
+  text-align: right;
+  font-size: 14px;
+  position: relative;
+  right: 5px;
+}
+
+.overline {
+  text-decoration: overline;
+}
+
+.all-buttons {
+  height: 250px;
+  width: 250px;
+  margin: auto;
+  position: relative;
+  top: 30px;
+  right: 5px;
+  text-align: center;
+}
+
+button {
+  margin-left: 5%;
+  margin-bottom: 3%;
+  height: 40px;
+  width: 45px;
+  box-shadow: 0px 5px 0px 0px cornflowerBlue;
+  border-radius: 5px;
+  border: none;
+  background: white;
+}
+
+button:active {
+  box-shadow: none;
+  /*transform vertical set to width of vertical part of box-shadow - gives a better press effect*/
+  transform: translate(0px, 6px);
+}
+
+/*gets rid of the blue border that appears on click*/
+button:focus {
+  outline: none;
+}
+
+.operator, #pos-neg, #clear, #sqrt, #equals {
+  background: lavenderBlush;
+}
+
+.name {
+  text-align: center;
+  margin: 35px;
+  color: silver;
+  font-size: 12px;
+}
