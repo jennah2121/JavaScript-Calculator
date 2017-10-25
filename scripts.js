@@ -114,7 +114,7 @@ $(document).ready(function(){
 /*PERCENTAGES function*/
 //function that correctly does percentage operations as opposed to modulo/remainder operations
 function percent(array) {
-  var nBeforeNum;
+  var nBeforeNum, z;
   var num = array.indexOf("%");
   num -=1;
 
@@ -142,9 +142,9 @@ function percent(array) {
 
   //correct handling of multiply/divide and add/subtract by percentages
   if(array[num-1] == "*" || array[num-1] == "/") {
-    var z = y.toString();
+    z = y.toString();
   } else {
-    var z = (x * y).toString();
+    z = (x * y).toString();
   }
 
   //pushing z to the array and removing the percentage and percent symbol
