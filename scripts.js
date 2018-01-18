@@ -1,106 +1,121 @@
-$(document).ready(function(){
+document.addEventListener("DOMContentLoaded",function(){
   var sqrtPresent = 0; //to track whether a sqrt has been entered
   var answer = []; //tracks what buttons have been pressed
 
-  $("button:not(#equals)").on("click", function(){
-    if(answer.length < 17 && !$(this).hasClass("invalid")) {
+  var buttons = document.querySelectorAll("button");
+  var operators = document.querySelectorAll(".operator");
+  var sum = document.querySelector(".sum");
+  var result = document.querySelector(".result");
+  var clear = document.querySelector("#clear");
+  var message = document.querySelector(".message");
+  var equals = document.querySelector("#equals");
 
-      var value = $(this).val();
-      answer.push(value);
+  buttons.forEach(btn => {
+    if(btn.id != 'equals') {
+      btn.addEventListener('click', function() {
+        if(answer.length < 17 && (!checkClass(this, "invalid"))) {
 
-      //changing the sign of numbers
-      if($(this).is("#pos-neg")) {
-        answer.pop();
-        answer = addSign(answer);
-      }
+          var value = this.value;
+          answer.push(value);
 
-      //preventing double operators in the array
-      if($(this).hasClass("operator")) {
-        $(".operator").addClass("invalid");
-      } else {
-        $(".operator").removeClass("invalid");
-      }
+          //changing the sign of numbers
+          if(this.id == "pos-neg") {
+            answer.pop();
+            answer = addSign(answer);
+          }
 
-
-      $(".sum").text(answer.join(""));
-
-      //calling percent function
-      if(value == "%") {
-        answer = percent(answer);
-      }
-
-      //used to help track number of sqroots
-      if($(this).is("#sqrt")) {
-        sqrtPresent++;
-        answer.push("("); //let user know that everything they enter after sqrt will be subject to a sqrt calculation
-      }
+          //preventing double operators in the array
+          if(checkClass(this, "operator")) {
+            operators.forEach(operator => addClass(operator, "invalid"));
+          } else {
+            operators.forEach(operator => removeClass(operator, "invalid"));
+          }
 
 
-      //preventing multiple zeros unless after decimal point or integers
-      if($(this).is("#zero")) {
-        if(answer[0] == 0 || [answer[answer.length-2], answer[answer.length-1]].join("").match(/[√\-x+/](?=0{1})/g)) {
-          $("#zero").addClass("invalid");
+          sum.innerHTML = answer.join("");
+
+          //calling percent function
+          if(value == "%") {
+            answer = percent(answer);
+          }
+
+          //used to help track number of sqroots
+          if(this.id == "sqrt") {
+            sqrtPresent++;
+            answer.push("("); //let user know that everything they enter after sqrt will be subject to a sqrt calculation
+          }
+
+
+          //preventing multiple zeros unless after decimal point or integers
+          if(this.id == "zero") {
+            if(answer[0] == 0 || [answer[answer.length-2], answer[answer.length-1]].join("").match(/[√\-x+/](?=0{1})/g)) {
+              addClass(this, "invalid");
+            }
+          } else {
+             removeClass(document.querySelector('#zero'), "invalid");
+          }
+
+          //adding a zero before decimal point if not preceeded by digit
+          if(value == ".") {
+            if(!answer.join("").match(/\d(?=\.)/g)) {
+              answer.splice(answer.length-2, 0, "0");
+            }
+          }
+
+
+        } else if(answer.length >= 17 ) {
+          removeClass(message, "hidden");
         }
-      } else {
-         $("#zero").removeClass("invalid");
-      }
-
-      //adding a zero before decimal point if not preceeded by digit
-      if(value == ".") {
-        if(!answer.join("").match(/\d(?=\.)/g)) {
-          answer.splice(answer.length-2, 0, "0");
-        }
-      }
-
-
-    } else if(answer.length >= 17 ) {
-      $(".message").removeClass("hidden");
+      });
     }
   });
 
 
   //sets calculator back to initial state
-  $("#clear").on("click", function(){
-    $(".sum, .result").text("0");
-    $(".message").addClass("hidden");
+  clear.addEventListener("click", function(){
+    sum.innerHTML = "0";
+    result.innerHTML = "0";
+    addClass(message, "hidden");
     answer = [];
     sqrtPresent = 0;
   });
 
   //get the users result and handle if sqrt has been clicked
-  $("#equals").on("click", function() {
-    $(".message").addClass("hidden");
+  equals.addEventListener("click", function() {
+    addClass(message, "hidden");
 
     try {
       if(sqrtPresent != 0) {
-        answer = sqroot(answer, sqrtPresent);
+        answer = sqroot(answer, sqrtPresent, sum);
         sqrtPresent = 0;
       }
 
       answer = answer.join(""); //needed for eval to work correctly
 
       //storing the length of the final answer in a variable
+      console.log(`answer: ${answer}`);
       var len = eval(answer).toString().length;
+      console.log(`len: ${len}`);
 
       //answers longer than 10 are too large to display, the below manages this
       if(len > 10) {
         if(!Number.isInteger(eval(answer))) {
-          $(".result").text(eval(answer).toFixed(8));
-          answer = [].concat($(".result").text().split(""));
+          result.innerHTML = eval(answer).toFixed(8);
+          answer = [].concat(result.innerHTML.split(""));
         } else {
-          $(".result").text("Error");
-          $(".sum").text("Number too large to display");
+          result.innerHTML = "Error";
+          sum.innerHTML = "Number too large to display";
           answer = [];
         }
       } else {
-        $(".result").text(eval(answer));
-        answer = [].concat($(".result").text().split(""));
+        result.innerHTML = eval(answer);
+        answer = [].concat(result.innerHTML.split(""));
       }
 
       //handles errors and outputs the error to the console
     } catch(Error) {
-      $(".result").text("Error");
-      $(".sum").text("clear to continue");
+      result.innerHTML = "Error";
+      sum.innerHTML = "clear to continue";
       answer = [];
       console.log(Error);
     }
@@ -156,7 +171,7 @@ function percent(array) {
 
 /* SQUARE ROOT function */
 //function to do square root operations
-function sqroot(array, sqrootsToFind) {
+function sqroot(array, sqrootsToFind, sum) {
   var changesMade = 0;
   var sqrtPresent = sqrootsToFind;
 
@@ -164,7 +179,7 @@ function sqroot(array, sqrootsToFind) {
   var bracket = ")".repeat(sqrtPresent);
 
   for(var i = 0; i < array.length; i++) {
-    if(array[i] == "√") {
+    if(array[i] == "√") { /*changes to âˆš*/
       array[i] = "Math.sqrt";
       changesMade ++;
     }
@@ -176,7 +191,7 @@ function sqroot(array, sqrootsToFind) {
   }
 
   array.push(bracket);
-  $(".sum").append(bracket);
+  sum.innerHTML += bracket;
   return array;
 }
 
@@ -221,4 +236,18 @@ function addSign(array) {
     array.splice(index, 1);
     return array;
   }
+}
+
+/* CHECK CLASS function*/
+//function checks the classes of an element(elem) for a specified class(check)
+function checkClass(elem, check) {
+  return elem.classList.contains(check);
+}
+
+function addClass(elem, addMe) {
+  elem.classList.add(addMe);
+}
+
+function removeClass(elem, removeMe) {
+  elem.classList.remove(removeMe);
 }
