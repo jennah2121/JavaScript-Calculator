@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded",function(){
 
           //preventing multiple zeros unless after decimal point or integers
           if(this.id == "zero") {
-            if(answer[0] == 0 || [answer[answer.length-2], answer[answer.length-1]].join("").match(/[√\-x+/](?=0{1})/g)) {
+            if(answer[0] == 0 && answer.length == 1 || !/[0-9\.]/.test(answer[answer.length-2])) {
               addClass(this, "invalid");
             }
           } else {
