@@ -3,7 +3,7 @@ A fully functioning javascript calculator made as part of FreeCodeCamp.
 This has identical functionality to the other JavaScript calculator I have made 
 however, this one does not use any frameworks. 
 
-View the project at: 
+View the project at: ( https://jennah2121.github.io/JavaScript-Calculator/.)
 
 #### User Stories specified by FreeCodeCamp
 1. I can add, subtract, multiply and divide two numbers.
