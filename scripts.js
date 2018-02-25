@@ -93,9 +93,7 @@ document.addEventListener("DOMContentLoaded",function(){
       answer = answer.join(""); //needed for eval to work correctly
 
       //storing the length of the final answer in a variable
-      console.log(`answer: ${answer}`);
       var len = eval(answer).toString().length;
-      console.log(`len: ${len}`);
 
       //answers longer than 10 are too large to display, the below manages this
       if(len > 10) {
